@@ -22,14 +22,17 @@ This project begins with a baseline vegetation detection approach using the Norm
 - Saves per-tile NDVI rasters and vegetation masks
 
 #### Outputs
-- Stored in `get_binarymask_outputs/`
+- The notebook creates an output folder `get_binarymask_outputs/`
 - Includes:
   - NDVI GeoTIFFs
   - Binary vegetation mask GeoTIFFs
 - A stitched, city-wide visualization:
-  - `Redlands_NDVI_May2022_NAIP.png`
+  - `Redlands_Vegetation_NDVI_NAIP.png`
  
 This step provides an interpretable but coarse baseline for vegetation detection.
+
+![Stitched NDVI map](figures/Redlands_Vegetation_NDVI_NAIP.png)
+
 
 ## Manual Labeling
 
@@ -42,10 +45,8 @@ This step provides an interpretable but coarse baseline for vegetation detection
 - Binary classification scheme:
   - **1** = Tree canopy
   - **0** = Non-tree
+- In `labeled_data` folder
 
-#### Labeled Data Location
-
-data/patches/labeled/
 
 ## Random Forest Tree Canopy Classifier
 
@@ -70,6 +71,8 @@ A **Random Forest** classifier was trained using a portion of the manually label
   - `treeCanopy_RFprediction.png`
 
 This step enables **semi-automatic labeling at scale**, though predictions are spatially noisy due to pixel-based classification.
+
+![RF Tree Canopy Prediction](figures/Redlands_TreeCanopy_RFprediction.png)
 
 ## Current Status and Next Steps
 
