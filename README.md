@@ -22,19 +22,19 @@ This project begins with a baseline vegetation detection approach using the Norm
 - Saves per-tile NDVI rasters and vegetation masks
 
 #### Outputs
-- Stored in `get_binary_mask_outputs/`
+- Stored in `get_binarymask_outputs/`
 - Includes:
   - NDVI GeoTIFFs
   - Binary vegetation mask GeoTIFFs
 - A stitched, city-wide visualization:
-  - `NDVI_May2022_NAIP.png`
+  - `Redlands_NDVI_May2022_NAIP.png`
  
 This step provides an interpretable but coarse baseline for vegetation detection.
 
-## Patch Creation and Manual Labeling
+## Manual Labeling
 
 #### Patch Extraction
-- A single NAIP tile was randomly selected
+- A single NAIP tile was selected
 - The tile was divided into **512 × 512 pixel patches**
 
 #### Manual Labeling
@@ -42,7 +42,6 @@ This step provides an interpretable but coarse baseline for vegetation detection
 - Binary classification scheme:
   - **1** = Tree canopy
   - **0** = Non-tree
-- Labeled masks align **pixel-wise** with the corresponding NAIP patches
 
 #### Labeled Data Location
 
@@ -50,7 +49,7 @@ data/patches/labeled/
 
 ## Random Forest Tree Canopy Classifier
 
-A **Random Forest** classifier was trained using **pixel-level features** derived from the labeled patches.
+A **Random Forest** classifier was trained using a portion of the manually labeled patches as well as **pixel-level features** derived from the labeled patches.
 
 #### Script
 - `rf_canopy_classifier.py`
@@ -60,9 +59,9 @@ A **Random Forest** classifier was trained using **pixel-level features** derive
   - NAIP spectral bands (RGB + NIR)
   - Vegetation indices (e.g., NDVI and related indices)
 - **Training data:**
-  - Pixels from 12 manually labeled patches
+  - Pixels from 12 manually labeled patches (80% training set, 20% test set)
 - **Output:**
-  - Binary masks of tree canopy prediction (RF predictions are per pixel)
+  - Binary masks of tree canopy prediction
 
 #### Outputs
 - **Predicted masks** for all NAIP patches:
