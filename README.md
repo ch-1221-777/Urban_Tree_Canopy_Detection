@@ -78,14 +78,13 @@ This step enables **semi-automatic labeling at scale**, though predictions are s
 
 #### Current Focus
 - Random Forest diagnostics
-- Error analysis
-- Identifying failure modes (e.g., speckle noise, edge confusion)
+- Select high confidence training samples for U-Net from RF output
 
 #### Planned Next Step
 - Transition to **U-Net** for semantic segmentation
 - Use:
   - Manually labeled patches
-  - Carefully selected RF-predicted patches as weak labels
+  - Carefully selected RF-predicted patches
 - Goal:
   - Improve spatial coherence and object-level canopy detection
 
