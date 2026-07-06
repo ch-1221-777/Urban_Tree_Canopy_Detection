@@ -50,10 +50,10 @@ This step provides an interpretable but coarse baseline for vegetation detection
 
 ## Random Forest Tree Canopy Classifier
 
-A **Random Forest** classifier was trained using a portion of the manually labeled patches as well as **pixel-level features** derived from the labeled patches.
+A **Random Forest** classifier was trained using a portion of the manually labeled patches against **pixel-level features** from the NAIP imagery patches (RGB and NDVI). 
 
 #### Script
-- `rf_canopy_classifier.py`
+`rf_canopy_classifier.py`
 
 #### Model Details
 - **Input features:**
@@ -70,23 +70,49 @@ A **Random Forest** classifier was trained using a portion of the manually label
 - **City-wide stitched visualization:**
   - `treeCanopy_RFprediction.png`
 
-This step enables **semi-automatic labeling at scale**, though predictions are spatially noisy due to pixel-based classification.
+
+The RF classifier performs a **semi-automatic labeling process**. Here it used to generate tree labels which approximate tree canopy for the entire NAIP imagery dataset covering the study area, which is far larger than could realisticall be labeled manually. 
 
 ![RF Tree Canopy Prediction](figures/Redlands_TreeCanopy_RFprediction.png)
+
+   
+Note that RF predictions can still be spatially noisy due to pixel-based classification. The goal is to use these as trainig labels for a U-Net segmentation model, thus reducing label noise is important. Incorrect or uncertain labels can degrade the performance of the segmentation model. 
+
+## High-Confidence RF Classifier
+
+#### Script
+ `rf_canopy_highconfidence_classifier.py`
+
+To improve the quality of the RF predictions (reduce label noise), we modify the classifier and label pixels by high-confidence and produce pseudo-label masks.  
+The high-confidence classifier computes class probabilities for each pixel representing the likelihood that the pixel belongs to tree canopy. Pixels with probability greater than 0.9 are labeled as tree (1), while pixels with probability below 0.1 are labeled as non-tree (0). Pixels with intermediate probabilities are considered uncertain and assigned a value of −1.
+
+| Pixel Value | Meaning |
+|-------------|---------|
+| **1** | High-confidence Tree |
+| **0** | High-confidence Non-Tree |
+| **−1** | Uncertain prediction (ignored later) |
+   
+(Include high-confidence map)
+
+## Selecting U-Net Training Samples
+
+#### Script
+`select_unet_trainingset.ipynb`
+
+The high-confidence masks are further filtered to identify image patches suitable for U-Net training.
+A patch is retained if 
+
+- more than 1% of the mask pixels are labeled as high-confidence tree (1) and, 
+- fewer than 40% of the mask pixels are labeled as uncertain (-1)
+
+These criteria remove patches containing too little canopy information or excessive uncertainty, resulting in **43 high-quality training patches**. The minimum tree coverage threshold was chosen to help retain a sufficient number of training samples, it simultaneously excludes patches containing too little or no canopy.
 
 ## Current Status and Next Steps
 
 #### Current Focus
-- Random Forest diagnostics
-- Select high confidence training samples for U-Net from RF output
-
-#### Planned Next Step
-- Transition to **U-Net** for semantic segmentation
-- Use:
-  - Manually labeled patches
-  - Carefully selected RF-predicted patches
-- Goal:
-  - Improve spatial coherence and object-level canopy detection
+- U-Net training
+- U-Net implementation on untrained data.
+- output map
 
 
   
