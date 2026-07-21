@@ -98,7 +98,6 @@ For each input imagery patch, and for each pixel, the high-confidence classifier
 | **0** | High-confidence Non-Tree |
 | **−1** | Uncertain prediction (ignored later) |
    
-(Include high-confidence map)
 
 ## Selecting U-Net Training Samples
 
@@ -111,12 +110,28 @@ A patch is retained if
 - more than 1% of the mask pixels are labeled as high-confidence tree (1) and, 
 - fewer than 40% of the mask pixels are labeled as uncertain (-1)
 
-These criteria remove patches containing too little canopy information or excessive uncertainty, resulting in **43 high-quality training patches**. The minimum tree coverage threshold was chosen to help retain a sufficient number of training samples, it simultaneously excludes patches containing too little or no canopy.
+These criteria remove patches containing too little canopy information or excessive uncertainty, resulting in **47  high-quality training patches**. The minimum tree coverage threshold was chosen to help retain a sufficient number of training samples.
 
+## U-Net Training
+A U-Net convolutional neural network (implemented with segmentation_models_pytorch) was trained for binary semantic segmentation of tree canopy. The network used a ResNet-18 encoder with three-channel RGB imagery as input and produced a per-pixel probability of tree canopy. Of the 47 high-quality patches, the training/validation split was set at 80%/20%.
+   
+- Loss function: BCEWithLogitsLoss   
+- Optimizer: Adam with fixed learning rate
+     
+
+<p align="left">
+  <img src="figures/loss_curve.png" width="50%">
+</p>
+
+![Validation_perEpoch](figures/validation_viz_byEpoch.png)
+
+
+![Validation_epoch10](figures/validation_viz_epoch10.png)
+
+    
 ## Current Status and Next Steps
 
 #### Current Focus
-- U-Net training
 - U-Net implementation on untrained data.
 - output map
 
